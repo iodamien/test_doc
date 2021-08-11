@@ -6,6 +6,8 @@
 #include <QPrinter>
 #include <QPdfWriter>
 #include <QPainter>
+#include <QFileDialog>
+#include <QDataStream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -30,8 +32,15 @@ void MainWindow::exportPDF() {
     QPrinter printer(QPrinter::PrinterResolution);
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setPaperSize(QPrinter::A4);
-    printer.setOutputFileName("/Users/irouvad/test_exo.pdf");
+    printer.setOutputFileName("test.pdf");
     printer.setPageMargins(QMarginsF(15, 15, 15, 15));
+
+    QFile currentFile("test.pdf");
+    if( !currentFile.open( QIODevice::ReadOnly )) {
+        return;
+    }
+    QDataStream dataStream(&currentFile);
+    QFileDialog::saveFileContent(dataStream, "output.pdf");
 
     document.print(&printer);
 }
